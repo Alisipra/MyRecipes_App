@@ -12,7 +12,7 @@ export default function SearchElement() {
         `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`
       );
       let data = await res.json();
-      //   console.log(data.meals);
+      
       setData(data.meals);
     };
     fetchData();
@@ -28,6 +28,7 @@ export default function SearchElement() {
                 <div className=" p-5" key={i}>
                   <img
                     className="w-[200px] h-[200px]  "
+                    loading="lazy"
                     src={v.strMealThumb}
                     alt=""
                   />

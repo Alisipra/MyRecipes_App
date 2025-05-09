@@ -33,6 +33,7 @@ export default function TrendingSlider() {
             return (
               <div key={i} className="rounded-md">
                 <img
+                loading=""
                   key={i}
                   className="w-[180px] h-[180px]  mt-4 p-4 gap-3 overflow-hidden rounded-md hover:scale-105 shadow-2xl"
                   src={v.strMealThumb}

@@ -10,76 +10,78 @@ export default function RecipeId() {
 
   useEffect(() => {
     const fetchData = async () => {
-      let res = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`
-      );
+      let res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
       let data = await res.json();
-      console.log(data.meals[0]);
       setData(data.meals[0]);
     };
     fetchData();
   }, [idMeal]);
+
   return (
     <div>
       <Navbar />
-      <div className="flex justify-evenly mt-5 p-4">
-        <div>
+
+      <div className="flex flex-col md:flex-row justify-evenly items-center mt-6 p-4 gap-6">
+        {/* Image */}
+        <div className="w-full md:w-1/3 flex justify-center">
           <img
             src={data.strMealThumb}
-            alt=""
-            className="w-[250px] h-[250px] p-4 border-white border-2
-          "
+            alt={data.strMeal}
+            loading="lazy"
+            className="w-[220px] sm:w-[250px] md:w-[300px] h-auto rounded-lg border-2 border-white shadow-md"
           />
         </div>
 
-        <div>
-          <button
-            className="bg-yellow-400 p-2 m-2"
-            onClick={() => setActive("ingredients")}
-          >
-            Ingredients
-          </button>
-          <button
-            className="bg-yellow-400 p-2 m-2"
-            onClick={() => setActive("instructions")}
-          >
-            Instructions
-          </button>
+        {/* Content */}
+        <div className="w-full md:w-2/3">
+          <div className="flex flex-wrap gap-2 mb-4">
+            <button
+              className={`p-2 rounded-md text-white font-semibold ${
+                active === "ingredients" ? "bg-yellow-500" : "bg-yellow-400"
+              }`}
+              onClick={() => setActive("ingredients")}
+            >
+              Ingredients
+            </button>
+            <button
+              className={`p-2 rounded-md text-white font-semibold ${
+                active === "instructions" ? "bg-yellow-500" : "bg-yellow-400"
+              }`}
+              onClick={() => setActive("instructions")}
+            >
+              Instructions
+            </button>
+          </div>
 
+          {/* Conditional Content */}
           {active === "ingredients" ? (
-            <>
-              <div className="font-bold p-4 m-4 text-[30px]">
-                <h1 className="text-3xl text-orange-500">Ingredients</h1>
-                <h2>
-                  {data.strIngredient1} ~ {data.strMeasure1}
-                </h2>
-                <h2>
-                  {data.strIngredient2} ~ {data.strMeasure2}
-                </h2>
-                <h2>
-                  {data.strIngredient3} ~ {data.strMeasure3}
-                </h2>
-                <h2>
-                  {data.strIngredient4} ~ {data.strMeasure4}
-                </h2>
-                <h2>
-                  {data.strIngredient5} ~ {data.strMeasure5}
-                </h2>
-                <h2>
-                  {data.strIngredient6} ~ {data.strMeasure6}
-                </h2>
-              </div>
-            </>
+            <div>
+              <h1 className="text-2xl sm:text-3xl text-orange-500 font-bold mb-4">Ingredients</h1>
+              <ul className="space-y-2 text-base sm:text-lg font-medium">
+                {[1, 2, 3, 4, 5, 6].map((num) => {
+                  const ingredient = data[`strIngredient${num}`];
+                  const measure = data[`strMeasure${num}`];
+                  return (
+                    ingredient && (
+                      <li key={num}>
+                        {ingredient} ~ {measure}
+                      </li>
+                    )
+                  );
+                })}
+              </ul>
+            </div>
           ) : (
-            <>
-              <div className="font-bold ">
-                <h1 className="text-3xl text-orange-500">Instruction</h1>
-                <p className="w-[300px]">{data.strInstructions}</p>
-              </div>
-            </>
+            <div>
+              <h1 className="text-2xl sm:text-3xl text-orange-500 font-bold mb-4">Instructions</h1>
+              <p className="text-justify text-base sm:text-lg leading-relaxed">
+                {data.strInstructions}
+              </p>
+            </div>
           )}
         </div>
       </div>
+
       <TrendingSlider />
     </div>
   );

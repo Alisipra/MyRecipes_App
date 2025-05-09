@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function PopularSlider() {
   const [data, setData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       let res = await fetch(
@@ -16,34 +17,47 @@ export default function PopularSlider() {
     };
     fetchData();
   }, []);
-  var settings = {
+
+  const settings = {
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
     pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024, // for tablets and below
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 640, // for mobile devices
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
+
   return (
-    <>
-      <div className="slider-container  overflow-hidden">
-        <Slider {...settings}>
-          {data.map((v, i) => {
-            return (
-              <Link key={i} to={`/${v.idMeal}`}>
-                <div className="rounded-md">
-                  <img
-                    key={i}
-                    className="w-[400px] h-[400px]  mt-4 p-4 gap-3 overflow-hidden rounded-md hover:scale-105 shadow-2xl"
-                    src={v.strMealThumb}
-                    alt=""
-                  />
-                </div>
-              </Link>
-            );
-          })}
-        </Slider>
-      </div>
-    </>
+    <div className="slider-container px-4 md:px-8 lg:px-16 py-6">
+      <Slider {...settings}>
+        {data.map((v, i) => (
+          <Link key={i} to={`/${v.idMeal}`}>
+            <div className="p-2">
+              <img
+                className="w-full h-64 md:h-72 lg:h-80 object-cover rounded-lg shadow-xl hover:scale-105 transition-transform duration-300"
+                src={v.strMealThumb}
+                alt={v.strMeal}
+                loading="lazy"
+              />
+              <h3 className="text-center mt-2 font-semibold text-lg text-white">{v.strMeal}</h3>
+            </div>
+          </Link>
+        ))}
+      </Slider>
+    </div>
   );
 }
